@@ -7,6 +7,7 @@ interface IOwnProps {
   handleSortClick: () => void;
   asc: boolean;
   search: string;
+  handleNameClick: (e: any) => void;
 }
 
 function Table({
@@ -15,6 +16,7 @@ function Table({
   handleSortClick,
   asc,
   search,
+  handleNameClick,
 }: IOwnProps) {
   if (loading) {
     return <h2>Loading...</h2>;
@@ -37,16 +39,25 @@ function Table({
             return character.name.toLowerCase().includes(search);
           })
           .map((character: iCharacter) => (
-            <tr>
-              <td key={character.id}>{character.name}</td>
-              <td key={character.id}>{character.race}</td>
-              <td key={character.id}>{character.gender}</td>
-              <td key={character.id}>
-                <a href={character.wikiUrl} target="_blank" rel="noreferrer">
-                  Learn more about {character.name} at LoTR Wiki
-                </a>
+            <tr key={character._id}>
+              <td
+                onClick={() => handleNameClick(character)}
+                style={{ cursor: "pointer" }}
+              >
+                {character.name}
               </td>
-              <td key={character.id}>{character.birth}</td>
+              <td>{character.race}</td>
+              <td>{character.gender}</td>
+              <td>
+                {character.wikiUrl ? (
+                  <a href={character.wikiUrl} target="_blank" rel="noreferrer">
+                    Learn more about {character.name} at LoTR Wiki
+                  </a>
+                ) : (
+                  `No wiki page for ${character.name}`
+                )}
+              </td>
+              <td>{character.birth}</td>
             </tr>
           ))}
       </tbody>
